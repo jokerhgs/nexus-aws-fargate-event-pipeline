@@ -1,0 +1,16 @@
+# Compiled output
+dist/
+*.js
+!jest.config.js
+*.d.ts
+
+# Dependencies
+node_modules/
+.pnpm-debug.log*
+
+# CDK
+cdk.out/
+
+# Environment and secrets
+.env
+.env.*
