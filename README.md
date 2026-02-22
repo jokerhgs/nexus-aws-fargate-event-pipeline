@@ -5,9 +5,8 @@ Nexus is a production-grade, "Zero-Trust" event-driven architecture built with A
 ## Architecture Overview
 
 ### Architecture Diagram
-> **Note**: Insert your visual architecture diagram here (e.g., Lucichart, draw.io, or Mermaid). 
-> 
-> ![Architecture Diagram Placeholder](docs/architecture-diagram.png)
+
+![Architecture Diagram Placeholder](docs/architecture-diagram.png)
 
 Nexus utilizes a multi-layered security approach combined with an event-driven execution model.
 
@@ -45,6 +44,18 @@ Nexus utilizes a multi-layered security approach combined with an event-driven e
 - **Storage**: Amazon S3
 - **Language**: TypeScript (Node.js 20)
 - **Containerization**: Docker (Multi-stage build)
+
+- **Built-in Backpressure**: Polling-based consumption ensures the worker never overwhelms the database during traffic spikes.
+
+## Infrastructure Trade-offs & Resilience
+
+This architecture makes a deliberate "Phase 1" design choice to balance professional resilience with AWS Free Tier cost constraints.
+
+| Component | Status | Resilience Strategy |
+| :--- | :--- | :--- |
+| **Compute (ECS)** | **Multi-AZ** | Automatically recovers in the secondary Availability Zone during hardware maintenance or sub-AZ failures. |
+| **Database (RDS)** | **Single-AZ** | Currently cost-optimized for the Free Tier. While it acts as a Single Point of Failure during a total AZ collapse, the VPC and Subnet Groups are already "HA-Ready" for a one-line upgrade (`multiAz: true`). |
+| **Networking** | **Highly Available** | VPC Endpoints and Subnets are provisioned across two physical data centers from Day 1. |
 
 ## Getting Started
 
