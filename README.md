@@ -20,6 +20,7 @@ Nexus utilizes a multi-layered security approach combined with an event-driven e
 - **Full IaC Integration**: 100% typed Infrastructure-as-Code using AWS CDK, including automated Docker image builds and ECR publishing.
 - **Multi-Stage Docker Build**: Optimized production container for minimal security footprint and fast deployments.
 - **Built-in Backpressure**: Polling-based consumption ensures the worker never overwhelms the database during traffic spikes.
+- **Infrastructure Auditing**: Integrated `cdk-nag` for automated security and compliance checks during the synthesis phase.
 
 ### Data Flow
 1. **Ingestion**: A user uploads a `.txt` file to the **S3 Bucket**.
@@ -34,6 +35,7 @@ Nexus utilizes a multi-layered security approach combined with an event-driven e
 - **VPC Endpoints**: Secure, private connections to AWS services are handled via Gateway (S3) and Interface (SQS, ECR, CloudWatch, Secrets Manager) Endpoints.
 - **Identity Management**: The Worker uses a least-privileged IAM Task Role to access specific AWS resources.
 - **Secret Management**: Database credentials are automatically generated and stored in **AWS Secrets Manager**, then injected into the Fargate container at runtime.
+- **Security Auditing (cdk-nag)**: Every resource is validated against the **AWS Solutions** NagPack. This ensures that S3 buckets, RDS instances, and VPC configurations meet cloud security best practices before deployment.
 
 ## Technology Stack
 
@@ -72,6 +74,13 @@ pnpm install
 # Deploy the stack
 pnpm exec cdk deploy
 ```
+
+### Infrastructure Linting
+Before deploying, you can run a security audit on your infrastructure:
+```powershell
+pnpm lint:nag
+```
+*Note: This runs `cdk synth` with `cdk-nag` enabled to catch security misconfigurations. Synthesis will fail if any errors are found.*
 
 ### Testing the Pipeline
 1. Get the bucket name from the CDK output or S3 console.
